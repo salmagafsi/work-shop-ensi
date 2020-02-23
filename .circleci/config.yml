@@ -4,8 +4,10 @@ orbs:
 workflows:
   build_deploy:
     jobs:
-
       - build
+      - deploy_production: 
+        requires:
+	 - build
 
 jobs:
   build:
@@ -19,5 +21,14 @@ jobs:
       - checkout
       - run: yarn install
       - run: yarn test
+  deploy_production:
+    environment:
+      HEROKU_APP_NAME: workshop-salma
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git:
+	 only-branch: master
        
 
